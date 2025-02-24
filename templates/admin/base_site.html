@@ -1,2 +1,9 @@
-{% extends 'admin/base_site.html' %} {% block extrahead %} {{ block.super }}
-{%include 'components/js.html' %} {% endblock %}
+{% extends 'admin/base_site.html' %}
+
+{% block title %}{{ title }} | Djangify News Aggregator - Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Djangify News Aggregator</a></h1>
+{% endblock %}
+
+{% block extrahead %}{{ block.super }}{% endblock %}
