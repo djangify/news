@@ -1,0 +1,130 @@
+<!-- templates/feeds/content_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content-grid" id="content-grid">
+    <!-- Content will be loaded here -->
+</div>
+
+<div class="flex justify-center my-8">
+    <button id="load-more" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Load More
+    </button>
+</div>
+
+<template id="content-template">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="aspect-w-16 aspect-h-9">
+            <img src="" alt="" class="object-cover w-full h-48">
+        </div>
+        <div class="p-4">
+            <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500 source"></span>
+                <span class="text-sm text-gray-500 date"></span>
+            </div>
+            <h2 class="mt-2 text-xl font-semibold text-gray-900 title"></h2>
+            <p class="mt-2 text-gray-600 description line-clamp-3"></p>
+            <div class="mt-4 flex justify-between items-center">
+                <a href="#" class="text-blue-500 hover:text-blue-700 read-more">Read More</a>
+                <span class="pinned-badge hidden">
+                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"></path>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+let currentPage = 1;
+const contentGrid = document.getElementById('content-grid');
+const template = document.getElementById('content-template');
+const loadMoreBtn = document.getElementById('load-more');
+
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+function createContentCard(item) {
+    const clone = template.content.cloneNode(true);
+    
+    const card = clone.querySelector('.bg-white');
+    const img = clone.querySelector('img');
+    const source = clone.querySelector('.source');
+    const date = clone.querySelector('.date');
+    const title = clone.querySelector('.title');
+    const description = clone.querySelector('.description');
+    const readMore = clone.querySelector('.read-more');
+    const pinnedBadge = clone.querySelector('.pinned-badge');
+
+    img.src = item.image_url || '/static/img/default_thumbnail.jpg';
+    img.alt = item.title;
+    source.textContent = item.source_name;
+    date.textContent = formatDate(item.published_date);
+    title.textContent = item.title;
+    description.textContent = item.description;
+    readMore.href = item.url;
+
+    if (item.is_pinned) {
+        pinnedBadge.classList.remove('hidden');
+    }
+
+    return clone;
+}
+
+async function loadContent() {
+    try {
+        const response = await fetch(`/api/load-more/?page=${currentPage}`);
+        const data = await response.json();
+        
+        data.results.forEach(item => {
+            contentGrid.appendChild(createContentCard(item));
+        });
+
+        if (!data.next) {
+            loadMoreBtn.style.display = 'none';
+        }
+        
+        currentPage++;
+    } catch (error) {
+        console.error('Error loading content:', error);
+    }
+}
+
+loadMoreBtn.addEventListener('click', loadContent);
+
+// Initial load
+loadContent();
+</script>
+
+<style>
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .content-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}
