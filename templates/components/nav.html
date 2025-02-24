@@ -1,0 +1,75 @@
+<!-- templates/components/nav.html -->
+<nav class="bg-gray-800 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <a href="{% url 'home' %}" class="font-bold text-xl">Djangify News Aggregator</a>
+        </div>
+        
+        <!-- Main Navigation -->
+        <div class="hidden md:ml-6 md:flex md:space-x-4">
+          <a href="{% url 'home' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if request.path == '/' %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Home</a>
+          <a href="{% url 'category' 'tech' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'tech' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Tech</a>
+          <a href="{% url 'category' 'dev' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'dev' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Dev</a>
+          <a href="{% url 'category' 'ai' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'ai' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">AI</a>
+        </div>
+      </div>
+      
+      <!-- Search -->
+      <div class="flex items-center">
+        <div class="relative">
+          <form action="{% url 'search' %}" method="get" class="flex">
+            <input type="text" name="q" placeholder="Search..." class="bg-gray-700 text-white rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <div class="flex items-center md:hidden">
+        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state -->
+  <div class="md:hidden hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="{% url 'home' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.path == '/' %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Home</a>
+      <a href="{% url 'category' 'tech' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'tech' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Tech</a>
+      <a href="{% url 'category' 'dev' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'dev' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Dev</a>
+      <a href="{% url 'category' 'ai' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'ai' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">AI</a>
+      <form action="{% url 'search' %}" method="get" class="mt-3 px-3">
+        <div class="flex">
+          <input type="text" name="q" placeholder="Search..." class="bg-gray-700 text-white rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', function() {
+      mobileMenu.classList.toggle('hidden');
+    });
+  });
+</script>

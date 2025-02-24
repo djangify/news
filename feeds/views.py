@@ -12,9 +12,15 @@ class ContentPagination(PageNumberPagination):
     max_page_size = 100
 
 class ContentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Content.objects.all().order_by('-is_pinned', '-published_date')
     serializer_class = ContentSerializer
     pagination_class = ContentPagination
+
+    def get_queryset(self):
+        queryset = Content.objects.all().order_by('-is_pinned', '-published_date')
+        category = self.request.query_params.get('category', None)
+        if category is not None:
+            queryset = queryset.filter(category__iexact=category)
+        return queryset
 
 # Frontend Views
 def content_list(request):

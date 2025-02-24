@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'feeds',
     'django_crontab',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +43,7 @@ ROOT_URLCONF = 'news_aggregator.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,6 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+# Admin Details
+ADMIN_SITE_HEADER = "Djangify News Aggregator"
+ADMIN_SITE_TITLE = "Djangify News Aggregator Admin Portal"
+ADMIN_INDEX_TITLE = "Welcome to the Djangify News Aggregator Admin Portal"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

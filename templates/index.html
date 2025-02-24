@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}News Aggregator - Your Daily Dose of News{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-b from-blue-900 to-blue-700 text-white py-12 mb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+        Djangify News Aggregator
+      </h1>
+      <p class="mt-6 text-xl max-w-3xl mx-auto">
+        A daily dose of tech, dev, and AI news from across the web, all in one place.
+      </p>
+      
+      <!-- Category Filter Pills -->
+      <div class="mt-8 flex justify-center space-x-4">
+        <a href="{% url 'home' %}" class="px-4 py-2 rounded-full {% if not category %}bg-white text-blue-800 font-medium{% else %}bg-blue-800 bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}">
+          All
+        </a>
+        <a href="{% url 'category' 'tech' %}" class="px-4 py-2 rounded-full {% if category == 'tech' %}bg-white text-blue-800 font-medium{% else %}bg-blue-800 bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}">
+          Tech
+        </a>
+        <a href="{% url 'category' 'dev' %}" class="px-4 py-2 rounded-full {% if category == 'dev' %}bg-white text-blue-800 font-medium{% else %}bg-blue-800 bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}">
+          Dev
+        </a>
+        <a href="{% url 'category' 'ai' %}" class="px-4 py-2 rounded-full {% if category == 'ai' %}bg-white text-blue-800 font-medium{% else %}bg-blue-800 bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}">
+          AI
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+  <!-- Latest News Section -->
+  <div class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200">
+      {% if category %}{{ category|title }} News{% else %}Latest News{% endif %}
+    </h2>
+    
+    <!-- News Grid -->
+    <div id="content-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for content in content_list %}
+        {% include "components/news_card.html" with content=content %}
+      {% empty %}
+        <div class="col-span-full text-center py-12">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M12 17.5a5.5 5.5 0 100-11 5.5 5.5 0 000 11z" />
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-1">No content found</h3>
+          <p class="text-gray-500">Check back later for updates or try a different category.</p>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Load More Button -->
+    {% if content_list %}
+    <div class="text-center mt-10">
+      <button id="load-more" 
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-colors duration-300"
+              data-url="{% url 'api_content_list' %}{% if category %}?category={{ category }}{% endif %}"
+              data-page="2">
+        Load More
+        <span id="loading-spinner" class="hidden ml-2 animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+      </button>
+    </div>
+    {% endif %}
+  </div>
+  
+  <!-- Featured Categories -->
+  <div>
+    <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200">Featured Categories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Tech Category Card -->
+      <a href="{% url 'category' 'tech' %}" class="group block bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg shadow-md overflow-hidden h-40">
+        <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
+          <div class="text-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <h3 class="text-xl font-bold">Tech News</h3>
+          </div>
+        </div>
+      </a>
+      
+      <!-- Dev Category Card -->
+      <a href="{% url 'category' 'dev' %}" class="group block bg-gradient-to-br from-green-500 to-teal-600 rounded-lg shadow-md overflow-hidden h-40">
+        <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
+          <div class="text-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <h3 class="text-xl font-bold">Dev News</h3>
+          </div>
+        </div>
+      </a>
+      
+      <!-- AI Category Card -->
+      <a href="{% url 'category' 'ai' %}" class="group block bg-gradient-to-br from-red-500 to-pink-600 rounded-lg shadow-md overflow-hidden h-40">
+        <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
+          <div class="text-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <h3 class="text-xl font-bold">AI News</h3>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

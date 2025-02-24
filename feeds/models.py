@@ -41,6 +41,7 @@ class Content(models.Model):
     source = models.ForeignKey(RSSFeed, on_delete=models.CASCADE)
     published_date = models.DateTimeField()
     is_pinned = models.BooleanField(default=False)
+    category = models.CharField(max_length=50, null=True, blank=True, default="General")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,5 +50,5 @@ class Content(models.Model):
 
     class Meta:
         ordering = ['-is_pinned', '-published_date']
-
+        
 
