@@ -4,7 +4,6 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from feeds.models import RSSFeed
 from feeds.services.feed_fetcher import FeedFetcher
-import asyncio
 import logging
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ class Command(BaseCommand):
 
         for feed in active_feeds:
             try:
-                asyncio.run(fetcher.fetch_feed(feed))
+                fetcher.fetch_feed(self)
                 self.stdout.write(self.style.SUCCESS(f'Successfully fetched: {feed.name}'))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f'Error fetching {feed.name}: {str(e)}'))

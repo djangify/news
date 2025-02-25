@@ -11,15 +11,26 @@
         <!-- Main Navigation -->
         <div class="hidden md:ml-6 md:flex md:space-x-4">
           <a href="{% url 'home' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if request.path == '/' %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Home</a>
-          <a href="{% url 'category' 'tech' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'tech' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Tech</a>
-          <a href="{% url 'category' 'dev' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'dev' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">Dev</a>
-          <a href="{% url 'category' 'ai' %}" class="px-3 py-2 rounded-md text-sm font-medium {% if 'ai' in request.path %}bg-gray-900{% else %}hover:bg-gray-700{% endif %}">AI</a>
+          
+          <!-- Categories Dropdown -->
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" type="button" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700  flex items-center" aria-expanded="false" aria-haspopup="true">
+              Categories
+              <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-gray-700 ring-1 ring-black ring-opacity-5 z-50" role="menu" aria-orientation="vertical" aria-labelledby="categories-menu">
+              {% for cat_value, cat_display in all_categories %}
+                <a href="{% url 'category' cat_value|lower %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">{{ cat_display }}</a>
+              {% endfor %}
+            </div>
+          </div>
         </div>
-      </div>
       
       <!-- Search -->
       <div class="flex items-center">
-        <div class="relative">
+        <div class="relative ml-auto">
           <form action="{% url 'search' %}" method="get" class="flex">
             <input type="text" name="q" placeholder="Search..." class="bg-gray-700 text-white rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
@@ -46,30 +57,33 @@
   <div class="md:hidden hidden" id="mobile-menu">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       <a href="{% url 'home' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if request.path == '/' %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Home</a>
-      <a href="{% url 'category' 'tech' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'tech' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Tech</a>
-      <a href="{% url 'category' 'dev' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'dev' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">Dev</a>
-      <a href="{% url 'category' 'ai' %}" class="block px-3 py-2 rounded-md text-base font-medium {% if 'ai' in request.path %}bg-gray-900 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">AI</a>
-      <form action="{% url 'search' %}" method="get" class="mt-3 px-3">
-        <div class="flex">
-          <input type="text" name="q" placeholder="Search..." class="bg-gray-700 text-white rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
+      
+      <!-- Categories dropdown for mobile -->
+      <div id="mobile-categories-menu" class="relative">
+        <button onclick="toggleMobileCategories()" type="button" class="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white" aria-expanded="false" aria-haspopup="true">
+          Categories
+          <svg class="inline-block ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="mobile-categories-dropdown" class="hidden pl-4 py-2 space-y-1">
+          {% for cat_value, cat_display in all_categories %}
+            <a href="{% url 'category' cat_value|lower %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">{{ cat_display }}</a>
+          {% endfor %}
         </div>
-      </form>
+      </div>
     </div>
   </div>
-</nav>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Existing mobile menu toggle code...
+      
+      // Add toggle function for categories dropdown
+      window.toggleMobileCategories = function() {
+        const dropdown = document.getElementById('mobile-categories-dropdown');
+        dropdown.classList.toggle('hidden');
+      }
     });
-  });
-</script>
+  </script>
+</nav>

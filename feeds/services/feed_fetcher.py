@@ -9,7 +9,8 @@ from ..models import RSSFeed, Content
 
 logger = logging.getLogger(__name__)
 
-async def fetch_feed(self, feed: RSSFeed):
+# Change this section in feeds/services/feed_fetcher.py
+def fetch_feed(self, feed: RSSFeed):
     """Fetch and process a single feed"""
     try:
         parsed_feed = feedparser.parse(feed.url)
@@ -36,30 +37,8 @@ async def fetch_feed(self, feed: RSSFeed):
                 elif hasattr(entry, 'media_content'):
                     image_url = entry.media_content[0]['url']
             
-            # Determine category based on tags or feed name
-            category = "General"
-            if hasattr(entry, 'tags') and entry.tags:
-                for tag in entry.tags:
-                    tag_name = tag.get('term', '').lower()
-                    if 'tech' in tag_name or 'technology' in tag_name:
-                        category = 'tech'
-                        break
-                    elif 'dev' in tag_name or 'developer' in tag_name or 'programming' in tag_name:
-                        category = 'dev'
-                        break
-                    elif 'ai' in tag_name or 'artificial intelligence' in tag_name or 'machine learning' in tag_name:
-                        category = 'ai'
-                        break
-            
-            # If no category from tags, try feed name
-            if category == "General":
-                feed_name_lower = feed.name.lower()
-                if 'tech' in feed_name_lower:
-                    category = 'tech'
-                elif 'dev' in feed_name_lower or 'code' in feed_name_lower:
-                    category = 'dev'
-                elif 'ai' in feed_name_lower or 'intelligence' in feed_name_lower:
-                    category = 'ai'
+            # Use the feed's category directly
+            category = feed.category
 
             Content.objects.create(
                 title=entry.title,

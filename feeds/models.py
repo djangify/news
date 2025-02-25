@@ -6,16 +6,28 @@ class RSSFeed(models.Model):
     name = models.CharField(max_length=200)
     url = models.URLField(unique=True)
     FEED_TYPES = [
-        ('ARTICLE', 'Article Feed'),
-        ('YOUTUBE', 'YouTube Feed'),
+        ('article', 'Article Feed'),
+        ('youtube', 'YouTube Feed'),
     ]
-    feed_type = models.CharField(max_length=10, choices=FEED_TYPES, default='ARTICLE')
+    feed_type = models.CharField(max_length=10, choices=FEED_TYPES, default='article')
+    
+    # Add category choices
+    CATEGORY_CHOICES = [
+        ('ai', 'Artificial Intelligence'),
+        ('frontend', 'Frontend'),
+        ('backend', 'Backend'),
+        ('python', 'Python'),
+        ('devops', 'DevOps'),
+        ('news', 'News'),
+        ('general', 'General'),
+    ]
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="general")
+    
     active = models.BooleanField(default=True)
     last_fetched = models.DateTimeField(null=True, blank=True)
     error_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.CharField(max_length=50, null=True, blank=True, default="General")
 
     def __str__(self):
         return self.name
@@ -27,7 +39,7 @@ class RSSFeed(models.Model):
       """Manually trigger feed fetch"""
       from .services.feed_fetcher import FeedFetcher
       fetcher = FeedFetcher()
-      asyncio.run(fetcher.fetch_feed(self))
+      fetcher.fetch_feed(self)
 
     def reset_error_count(self):
       """Reset the error counter"""
