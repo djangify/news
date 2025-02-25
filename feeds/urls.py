@@ -10,5 +10,5 @@ urlpatterns = [
     path('all/', views.content_list, name='content_list'),
     
     # API URLs
-    path('api/load-more/', views.load_more_content, name='load_more_content'),
+    path('api/load-more/', views.load_more_content, name='api_content_list'),
 ] + router.urls

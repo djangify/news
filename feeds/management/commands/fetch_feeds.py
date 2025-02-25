@@ -16,12 +16,12 @@ class Command(BaseCommand):
         active_feeds = RSSFeed.objects.filter(active=True)
 
         if not active_feeds:
-            self.stdout.write('No active feeds found')
+            self.stdout.write(self.style.WARNING('No active feeds found'))
             return
 
         for feed in active_feeds:
             try:
-                fetcher.fetch_feed(self)
+                fetcher.fetch_feed(feed)  # Pass the feed object, not self
                 self.stdout.write(self.style.SUCCESS(f'Successfully fetched: {feed.name}'))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f'Error fetching {feed.name}: {str(e)}'))
