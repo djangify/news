@@ -1,7 +1,9 @@
 # core/views.py
 from django.shortcuts import render
-from feeds.models import Content, RSSFeed
-from feeds.views import ContentPagination  # Import the pagination class from feeds/views.py
+from feeds.models import Content, RSSFeed 
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.template import RequestContext
 
 def get_all_categories():
     """Get all unique categories from the RSSFeed model with their display names"""
@@ -65,3 +67,31 @@ def search(request):
         'total_count': total_count
     }
     return render(request, 'index.html', context)
+
+
+def privacy_policy(request):
+    # Get all unique categories for navigation
+    all_categories = get_all_categories()
+    
+    context = {
+        'all_categories': all_categories,
+        'category_choices': dict(RSSFeed.CATEGORY_CHOICES)
+    }
+    return render(request, 'core/privacy_policy.html', context)
+
+
+def terms_policy(request):
+    # Get all unique categories for navigation
+    all_categories = get_all_categories()
+    
+    context = {
+        'all_categories': all_categories,
+        'category_choices': dict(RSSFeed.CATEGORY_CHOICES)
+    }
+    return render(request, 'core/terms_policy.html', context)
+
+
+def robots_txt(request):
+    content = render_to_string('robots.txt', {'request': request})
+    return HttpResponse(content, content_type='text/plain')
+

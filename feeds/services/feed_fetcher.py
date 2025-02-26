@@ -6,6 +6,8 @@ from datetime import datetime
 from django.utils import timezone
 from urllib.parse import urlparse, parse_qs
 from ..models import RSSFeed, Content
+from django.utils import timezone
+import pytz
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +33,7 @@ class FeedFetcher:
                 feed.save()
                 return
                 
-            for entry in parsed_feed.entries[:7]:  # Limit to latest 7 entries
+            for entry in parsed_feed.entries[:4]:  # Limit to latest 4 entries
                 try:
                     # Skip if content already exists
                     if Content.objects.filter(url=entry.link).exists():
@@ -107,23 +109,30 @@ class FeedFetcher:
         # Replace emojis and other problematic characters if needed
         return text.encode('utf-8', errors='ignore').decode('utf-8')
 
-    def parse_date(self, date_str):
-        """Parse date string from feed to datetime object"""
-        if not date_str:
+
+    def parse_date(self, date_string):
+        """Parse a date string into a datetime object"""
+        if not date_string:
             return timezone.now()
-        
+            
         try:
-            dt = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-        except ValueError:
+            # Try to parse as ISO format
+            dt = datetime.fromisoformat(date_string.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
             try:
-                dt = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %Z')
-            except ValueError:
-                try:
-                    dt = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S%z')
-                except ValueError:
-                    return timezone.now()
-        
-        return dt
+                # Use Python's dateutil parser as an alternative
+                from dateutil import parser
+                dt = parser.parse(date_string)
+            except:
+                # If all parsing fails, use current time
+                return timezone.now()
+            
+        # Check if timezone info is missing and add UTC if it is
+        if dt and dt.tzinfo is None:
+            dt = dt.replace(tzinfo=pytz.UTC)
+            
+        return dt if dt else timezone.now()
+
     
     def get_youtube_video_id(self, url):
         """Extract video ID from YouTube URL"""
