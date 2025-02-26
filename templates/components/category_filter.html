@@ -1,0 +1,20 @@
+<!-- templates/components/category_filter.html -->
+<div class="mb-8">
+    <button id="filter-toggle" class="w-full flex items-center justify-between py-2 px-4 bg-gray-700 hover:bg-blue-50 text-white  transition-colors duration-200">
+        <span class="font-medium">Filter by Category</span>
+        <svg id="filterIcon" class="w-5 h-5 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+    
+    <div id="categories-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-4  p-4  hidden">
+        <a href="{% url 'home' %}" class="category-btn {% if not category %}bg-gray-700 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-md px-4 py-2 text-center transition-colors duration-200">
+            All Categories
+        </a>
+        {% for cat_value, cat_display in all_categories %}
+        <a href="{% url 'category' cat_value|lower %}" class="category-btn {% if category == cat_value|lower %}bg-gray-700 text-white{% else %}bg-gray-200 text-gray-700 hover:bg-gray-300{% endif %} rounded-md px-4 py-2 text-center transition-colors duration-200">
+            {{ cat_display }}
+        </a>
+        {% endfor %}
+    </div>
+</div>

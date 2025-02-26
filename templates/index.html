@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
+
 {% block title %}News Aggregator - Your Daily Dose of News{% endblock %}
 
 {% block content %}
@@ -19,10 +20,14 @@
 </section>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+  <!-- Category Filter Component -->
+  {% include "components/category_filter.html" %}
+  
   <!-- Latest News Section -->
   <div class="mb-12">
     <h2 class="text-2xl font-bold mt-8 mb-6 pb-2 border-b border-gray-200">
       {% if category %}{{ category|title }} News{% else %}Latest News{% endif %}
+  </h2>
     </h2>
     
     <!-- News Grid -->
@@ -54,7 +59,7 @@
     {% endif %}
   </div>
   
-  <!-- Featured Categories -->
+  <!-- Featured Categories Section (Keep this as is) -->
   <div>
     <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200">Featured Categories</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -100,4 +105,5 @@
 
 {% block extra_js %}
   <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/category-filter.js' %}"></script>
 {% endblock %}

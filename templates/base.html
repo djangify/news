@@ -70,8 +70,11 @@
         });
     </script>
     
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    {% block extra_js %}{% endblock %}
+
+    {% block extra_js %}
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        <script src="{% static 'js/category-filter.js' %}"></script>
+    {% endblock %}
 </body>
 </html>
