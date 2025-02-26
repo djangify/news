@@ -31,7 +31,7 @@ class FeedFetcher:
                 feed.save()
                 return
                 
-            for entry in parsed_feed.entries[:20]:  # Limit to latest 20 entries
+            for entry in parsed_feed.entries[:7]:  # Limit to latest 7 entries
                 try:
                     # Skip if content already exists
                     if Content.objects.filter(url=entry.link).exists():
