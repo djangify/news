@@ -4,18 +4,19 @@
 {% block title %}News Aggregator - Your Daily Dose of News{% endblock %}
 
 {% block content %}
-<div class=" text-black py-12 mb-8 ">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
-    <div class="text-center text-white bg-gradient-to-b from-blue-900 to-blue-700 py-8 rounded-lg shadow-lg font-black">
-      <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+<!-- Hero Section - Light version -->
+<section class="bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="text-center lg:pt-8">
+      <h1 class="text-4xl mb-4 font-extrabold text-gray-900">
         Djangify News Aggregator
       </h1>
-      <p class="mt-6 text-xl max-w-3xl mx-auto">
+      <p class="text-lg text-gray-500 mb-6">
         A daily dose of tech, dev, and AI news from across the web, all in one place.
       </p>
-   </div>
+    </div>
   </div>
-</div>
+</section>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
   <!-- Latest News Section -->
@@ -47,6 +48,7 @@
               data-url="{% url 'load_more_content' %}{% if category %}?category={{ category }}{% endif %}"
               data-page="2">
         Load More
+        <span id="loading-spinner" class="hidden ml-2 animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
       </button>
     </div>
     {% endif %}

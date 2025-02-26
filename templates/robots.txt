@@ -3,11 +3,8 @@ Allow: /
 Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
 
 Disallow: /admin/
-Disallow: /profiles/
-Disallow: /ckeditor/
 Disallow: /redirects/
 Disallow: /*/tag/
 Disallow: /*?*
 Disallow: /*/category/*/feed/
-Disallow: /feed/
-Disallow: /shop/secure-download/
+Disallow: /search/
