@@ -1,40 +1,60 @@
 // static/js/main.js
 document.addEventListener('DOMContentLoaded', function () {
-  // Load more content functionality
   const loadMoreButton = document.getElementById('load-more');
+
   if (loadMoreButton) {
     loadMoreButton.addEventListener('click', function () {
       const apiUrl = this.getAttribute('data-url');
       const currentPage = parseInt(this.getAttribute('data-page'));
-      const spinner = document.getElementById('loading-spinner');
 
-      // Show loading spinner
-      spinner.classList.remove('hidden');
+      // Visual feedback that button was clicked
+      loadMoreButton.innerText = 'Loading...';
+      loadMoreButton.classList.add('opacity-70');
 
-      // Fetch next page of content
-      fetch(`${apiUrl}${apiUrl.includes('?') ? '&' : '?'}page=${currentPage}`)
-        .then(response => response.json())
+      // Build the URL with proper pagination
+      let url = apiUrl;
+      if (url.includes('?')) {
+        url += '&page=' + currentPage;
+      } else {
+        url += '?page=' + currentPage;
+      }
+
+      // Fetch the next page content
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then(data => {
-          // Hide spinner
-          spinner.classList.add('hidden');
+          // Reset button state
+          loadMoreButton.innerText = 'Load More';
+          loadMoreButton.classList.remove('opacity-70');
 
-          // Check if we have more data
           if (data.results && data.results.length > 0) {
             // Update page counter for next load
             loadMoreButton.setAttribute('data-page', currentPage + 1);
 
-            // Append new content to container
+            // Get content container
             const contentContainer = document.getElementById('content-container');
 
+            // Process and append new content
             data.results.forEach(content => {
               const card = createNewsCard(content);
               contentContainer.appendChild(card);
             });
 
-            // If no next page, hide the load more button
-            if (!data.next) {
+            // If we've reached the end, hide the button
+            if (!data.next || data.results.length < 12) {
               loadMoreButton.classList.add('hidden');
             }
+
+            // Scroll a bit to show new content
+            window.scrollBy({
+              top: 300,
+              behavior: 'smooth'
+            });
           } else {
             // No more content, hide button
             loadMoreButton.classList.add('hidden');
@@ -42,17 +62,22 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => {
           console.error('Error loading more content:', error);
-          spinner.classList.add('hidden');
 
-          // Show error message
-          const errorMessage = document.createElement('div');
-          errorMessage.className = 'text-red-500 text-center mt-2';
-          errorMessage.textContent = 'Failed to load more content. Please try again.';
-          loadMoreButton.parentNode.appendChild(errorMessage);
+          // Reset button and show error
+          loadMoreButton.innerText = 'Load More';
+          loadMoreButton.classList.remove('opacity-70');
+
+          // Show error toast
+          const errorToast = document.createElement('div');
+          errorToast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg';
+          errorToast.textContent = 'Failed to load more content. Please try again.';
+          document.body.appendChild(errorToast);
 
           // Remove error message after 3 seconds
           setTimeout(() => {
-            errorMessage.remove();
+            errorToast.classList.add('opacity-0');
+            errorToast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => errorToast.remove(), 500);
           }, 3000);
         });
     });
@@ -123,12 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     return card;
   }
-
-
-
-
-
-
   // Handle dark mode toggle if implemented
   const darkModeToggle = document.getElementById('dark-mode-toggle');
   if (darkModeToggle) {

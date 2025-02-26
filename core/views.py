@@ -1,6 +1,7 @@
 # core/views.py
 from django.shortcuts import render
 from feeds.models import Content, RSSFeed
+from feeds.views import ContentPagination  # Import the pagination class from feeds/views.py
 
 def get_all_categories():
     """Get all unique categories from the RSSFeed model with their display names"""
@@ -18,33 +19,49 @@ def index(request, category=None):
     
     # Get content filtered by category if provided
     if category:
-        content_list = Content.objects.filter(category__iexact=category).order_by('-published_date')
+        queryset = Content.objects.filter(category__iexact=category).order_by('-published_date')
     else:
-        content_list = Content.objects.all().order_by('-published_date')
+        queryset = Content.objects.all().order_by('-published_date')
     
-    # Paginate the content - first 12 items only, rest loaded via AJAX
-    content_list = content_list[:12]
+    # Calculate total pages for pagination info
+    page_size = 12  # Use the same page size as in ContentPagination
+    total_count = queryset.count()
+    total_pages = (total_count + page_size - 1) // page_size  # Ceiling division
     
-    # Create a single context with all needed variables
+    # Get first page of content
+    content_list = queryset[:page_size]
+    
+    # Create context with all needed variables
     context = {
         'content_list': content_list,
         'all_categories': all_categories,
-        'category': category,  # Keep this to highlight the current category
-        'category_choices': dict(RSSFeed.CATEGORY_CHOICES)  # Add the choices dictionary
+        'category': category,
+        'category_choices': dict(RSSFeed.CATEGORY_CHOICES),
+        'total_pages': total_pages,
+        'total_count': total_count
     }
     
-    # Only one return statement
     return render(request, 'index.html', context)
 
 def search(request):
     query = request.GET.get('q', '')
-    content_list = Content.objects.filter(title__icontains=query).order_by('-published_date')
+    queryset = Content.objects.filter(title__icontains=query).order_by('-published_date')
     all_categories = get_all_categories()
+    
+    # Calculate total pages for pagination info
+    page_size = 12  # Use the same page size as in ContentPagination
+    total_count = queryset.count()
+    total_pages = (total_count + page_size - 1) // page_size  # Ceiling division
+    
+    # Get first page of content
+    content_list = queryset[:page_size]
     
     context = {
         'content_list': content_list,
         'query': query,
         'all_categories': all_categories,
-        'category_choices': dict(RSSFeed.CATEGORY_CHOICES)  # Add the choices dictionary
+        'category_choices': dict(RSSFeed.CATEGORY_CHOICES),
+        'total_pages': total_pages,
+        'total_count': total_count
     }
     return render(request, 'index.html', context)

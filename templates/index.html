@@ -13,37 +13,7 @@
       <p class="mt-6 text-xl max-w-3xl mx-auto">
         A daily dose of tech, dev, and AI news from across the web, all in one place.
       </p>
-   
-      <!-- Category Filter Pills -->
-      <div class="mt-8 flex flex-wrap justify-center gap-2">
-        <a href="{% url 'home' %}" class="px-4 py-2 rounded-full {% if not category %} font-medium{% else %}bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}" aria-current="{% if not category %}page{% else %}false{% endif %}">
-          All
-        </a>
-        
-        <!-- Category dropdown for small screens -->
-        <div class="relative sm:hidden" x-data="{ open: false }">
-          <button @click="open = !open" type="button" class="px-4 py-2 rounded-full bg-blue-900 bg-opacity-30 hover:bg-opacity-40 text-black" aria-expanded="false" aria-haspopup="true">
-            Categories
-            <svg class="inline-block ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          <div x-show="open" @click.away="open = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-blue-800" role="menu" aria-orientation="vertical">
-            {% for cat_value, cat_display in all_categories %}
-              <a href="{% url 'category' cat_value|lower %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">{{ cat_display }}</a>
-            {% endfor %}
-          </div>
-        </div>
-        
-        <!-- Individual category pills for larger screens -->
-        <div class="hidden sm:flex sm:flex-wrap sm:gap-2">
-          {% for cat_value, cat_display in all_categories %}
-            <a href="{% url 'category' cat_value|lower %}" class="px-4 py-2 rounded-full {% if category == cat_value|lower %}bg-blue-900 text-blue-800 font-medium{% else %}bg-blue-800 bg-opacity-30 hover:bg-opacity-40 text-white{% endif %}" aria-current="{% if category == cat_value|lower %}page{% else %}false{% endif %}">
-              {{ cat_display }}
-            </a>
-          {% endfor %}
-        </div>
-      </div>
+   </div>
   </div>
 </div>
 
@@ -73,11 +43,10 @@
     {% if content_list %}
     <div class="text-center mt-10">
       <button id="load-more" 
-              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-colors duration-300"
-              data-url="{% url 'api_content_list' %}{% if category %}?category={{ category }}{% endif %}"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md shadow-sm transition-all duration-300"
+              data-url="{% url 'load_more_content' %}{% if category %}?category={{ category }}{% endif %}"
               data-page="2">
         Load More
-        <span id="loading-spinner" class="hidden ml-2 animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
       </button>
     </div>
     {% endif %}
@@ -88,7 +57,7 @@
     <h2 class="text-2xl font-bold mb-6 pb-2 border-b border-gray-200">Featured Categories</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Tech Category Card -->
-      <a href="{% url 'category' 'devops' %}" class="group block bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg shadow-md overflow-hidden h-40">
+      <a href="{% url 'category' 'devops' %}" class="group block bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg shadow-md overflow-visible h-40">
         <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
           <div class="text-center text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,7 +69,7 @@
       </a>
       
       <!-- Backend Category Card -->
-      <a href="{% url 'category' 'backend' %}" class="group block bg-gradient-to-br from-green-500 to-teal-600 rounded-lg shadow-md overflow-hidden h-40">
+      <a href="{% url 'category' 'backend' %}" class="group block bg-gradient-to-br from-green-500 to-teal-600 rounded-lg shadow-md overflow-visible h-40">
         <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
           <div class="text-center text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,7 +81,7 @@
       </a>
       
       <!-- AI Category Card -->
-      <a href="{% url 'category' 'ai' %}" class="group block bg-gradient-to-br from-red-500 to-pink-600 rounded-lg shadow-md overflow-hidden h-40">
+      <a href="{% url 'category' 'ai' %}" class="group block bg-gradient-to-br from-red-500 to-pink-600 rounded-lg shadow-md overflow-visible h-40">
         <div class="h-full flex items-center justify-center px-6 transition-transform duration-300 group-hover:scale-105">
           <div class="text-center text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,5 +97,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
