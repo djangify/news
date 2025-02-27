@@ -1,10 +1,14 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 from .models import RSSFeed, Content
-from .serializers import RSSFeedSerializer, ContentSerializer
+from .serializers import ContentSerializer
+from django.core.cache import cache
+from django.conf import settings
+
 
 class ContentPagination(PageNumberPagination):
     page_size = 12  
@@ -78,3 +82,33 @@ def content_list(request):
     }
     return render(request, 'feeds/content_list.html', context)
 
+class ContentListView(APIView):
+    def get(self, request):
+        # Try to get from cache first
+        cache_key = 'content_list'
+        content_data = cache.get(cache_key)
+        
+        if not content_data:
+            # Cache miss, fetch from database
+            queryset = Content.objects.order_by('-published_date')[:50]
+            serializer = ContentSerializer(queryset, many=True)
+            content_data = serializer.data
+            
+            # Set cache
+            cache.set(cache_key, content_data, settings.CACHE_TTL)
+        
+        return Response(content_data)
+    
+def homepage(request):
+    # Try to get from cache first
+    cache_key = 'homepage_news_items'
+    news_items = cache.get(cache_key)
+    
+    if not news_items:
+        # Cache miss - get from database
+        news_items = Content.objects.order_by('-published_date')[:20]
+        
+        # Store in cache for 15 minutes
+        cache.set(cache_key, news_items, 60 * 15)
+    
+    return render(request, 'index.html', {'news_items': news_items})

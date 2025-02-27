@@ -1,6 +1,7 @@
-import asyncio
 from django.db import models
-from django.utils import timezone
+from django.core.cache import cache
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class RSSFeed(models.Model):
     name = models.CharField(max_length=200)
@@ -57,6 +58,7 @@ class Content(models.Model):
     category = models.CharField(max_length=50, null=True, blank=True, default="General")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    source = models.ForeignKey('RSSFeed', on_delete=models.CASCADE, db_index=True) 
     
 
     def __str__(self):
@@ -64,5 +66,12 @@ class Content(models.Model):
 
     class Meta:
         ordering = ['-is_pinned', '-published_date']
-        
+        indexes = [
+            models.Index(fields=['published_date', 'category']),  # Compound index for common queries
+        ]
+
+@receiver(post_save, sender=Content)
+def clear_content_cache(sender, instance, **kwargs):
+    # Clear cache when content is updated
+    cache.delete('homepage_news_items')
 
