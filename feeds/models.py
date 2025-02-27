@@ -2,6 +2,7 @@ from django.db import models
 from django.core.cache import cache
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
 
 class RSSFeed(models.Model):
     name = models.CharField(max_length=200)
@@ -75,3 +76,13 @@ def clear_content_cache(sender, instance, **kwargs):
     # Clear cache when content is updated
     cache.delete('homepage_news_items')
 
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'content')
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.content.title[:30]}"
