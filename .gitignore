@@ -27,3 +27,5 @@ db.sqlite3
 Thumbs.db
 
 node_modules/
+production/
+.htaccess

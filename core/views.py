@@ -4,6 +4,17 @@ from feeds.models import Content, RSSFeed
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.template import RequestContext
+import logging
+
+logger = logging.getLogger('news_aggregator')
+
+def some_view(request):
+    # Log messages at different levels
+    logger.debug('This is a debug message')
+    logger.info('This is an info message')
+    logger.warning('This is a warning')
+    logger.error('This is an error')
+    
 
 def get_all_categories():
     """Get all unique categories from the RSSFeed model with their display names"""

@@ -1,8 +1,10 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import pymysql
 
 load_dotenv()
+pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,10 +14,17 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['news.djangify.com', 'localhost', '127.0.0.1']
 
+# Configure CSRF_TRUSTED_ORIGINS
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://news.djangify.com').split(',')
+
+
+SITE_ID = 1
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -23,13 +32,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'feeds',
     'django_crontab',
+    'feeds',
     'core',
+    # django-allauth apps
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -68,9 +81,12 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'use_unicode': True,
+        "OPTIONS": {
+            "charset": "utf8mb4",
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+            "use_unicode": True,
+            "connect_timeout": 10,
+            "autocommit": True,
         }
     }
 }
@@ -157,3 +173,66 @@ CACHES = {
 
 # Cache timeout (15 minutes)
 CACHE_TTL = 60 * 15
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default authentication
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth authentication
+]
+
+# Allauth configuration
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': {'rate': '5/300s'}  # 5 attempts in 300 seconds
+}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'optional' or 'none'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+LOGIN_REDIRECT_URL = '/'  # Redirect after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
+
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGS_DIR, 'django.log'),
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'news_aggregator': {  
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
