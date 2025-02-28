@@ -1,1 +1,67 @@
 @import "tailwindcss";
+
+/* Add custom CSS here */
+:root {
+  --primary: #045858;
+  --primary-dark: #034343;
+  --primary-light: #056b6b;
+  --accent: #0c8383;
+  --text: #ffffff;
+  --text-dark: #1a202c;
+  --background: #f7fafc;
+  --background-dark: #2d3748;
+}
+
+/* Primary color overrides */
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.border-primary {
+  border-color: var(--primary) !important;
+}
+
+.hover\:bg-primary:hover {
+  background-color: var(--primary) !important;
+}
+
+.hover\:text-primary:hover {
+  color: var(--primary) !important;
+}
+
+/* Replace default Tailwind colors */
+.bg-blue-600 {
+  background-color: var(--primary) !important;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: var(--primary-dark) !important;
+}
+
+.text-blue-600 {
+  color: var(--primary) !important;
+}
+
+.hover\:text-blue-800:hover {
+  color: var(--primary-dark) !important;
+}
+
+.focus\:ring-blue-500:focus {
+  --tw-ring-color: var(--primary) !important;
+}
+
+/* Replace gray backgrounds */
+.bg-gray-700,
+.bg-gray-800,
+.bg-gray-900 {
+  background-color: var(--primary) !important;
+}
+
+.hover\:bg-gray-700:hover,
+.hover\:bg-gray-900:hover {
+  background-color: var(--primary-dark) !important;
+}

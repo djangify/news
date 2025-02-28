@@ -29,3 +29,33 @@ Thumbs.db
 node_modules/
 production/
 .htaccess
+
+# Tailwind-generated files
+**/node_modules/
+**/.next/
+**/dist/
+
+# Tailwind JIT cache
+.tailwind/
+
+# Build artifacts
+postcss.config.js
+tailwind.config.js
+
+# Database files 
+db.sqlite3
+db.sqlite3-journal
+
+# Django static and media files
+staticfiles/
+media/
+
+# Tailwind CSS cache and build files
+tailwind/
+node_modules/
+
+# Compiled CSS (if using Django Tailwind)
+static/css/
+static/js/
+
+
