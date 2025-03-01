@@ -2,6 +2,9 @@
 
 A modern, responsive news aggregator application built with Django and Python that automatically collects and displays content from various RSS feeds across different technology categories.
 
+![djangify news site](https://raw.githubusercontent.com/djangify/news/main/news.djangify.png)
+
+
 ## 🚀 Features
 
 - **Automatic Content Aggregation** - Pulls from multiple RSS and YouTube feeds
