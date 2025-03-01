@@ -44,6 +44,9 @@ This is a modern, responsive news aggregator application built with Django and P
 - **Asynchronous Feed Fetching** - For improved performance
 - **Content Retention System** - Automatically cleans up old content to maintain database performance
 
+### AI Assistant
+- **Claude AI** - Claude is great to cut down the coding time and to provide help with bugs and errors. While it is still easy for Claude to introduce bugs and errors (so a careful overview of what it provides is essential) helping with errors in production and fixing errors in cpanel plus general debugging help is invaluable. The ability to use prompt engineering successfully is essential to avoid teeth pulling and general frustration!
+
 ## 📁 Project Structure
 
 ```
