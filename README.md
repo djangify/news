@@ -1,6 +1,10 @@
 # Djangify News Aggregator
 
-A modern, responsive news aggregator application built with Django and Python that automatically collects and displays content from various RSS feeds across different technology categories.
+I decided to build a news aggregator using Django and Django Rest Framework to collate all the different newsletters and youtube channels I reguarly read. So now, rather than have a ton of emails in my inbox I can visit the site and read the latest news.
+
+You can visit the site here: [djangify news](https://news.djangify.com)
+
+This is a modern, responsive news aggregator application built with Django and Python that automatically collects and displays content from various RSS feeds across different technology categories.
 
 ![djangify news site](https://raw.githubusercontent.com/djangify/news/main/news.djangify.png)
 
@@ -303,3 +307,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+
+## Connect
+Writing my coding journey at [todiane.dev](https://todiane.dev)
+
+Website: [Djangify](https://djangify.com)
