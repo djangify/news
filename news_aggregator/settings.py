@@ -2,32 +2,20 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import pymysql
-import logging.config
 import os
 
 load_dotenv()
 pymysql.install_as_MySQLdb()
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Logs directory setup
-LOGS_DIR = os.path.join(BASE_DIR, 'logs')
-if not os.path.exists(LOGS_DIR):
-    os.makedirs(LOGS_DIR)
-
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key-here')
-
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = ['news.djangify.com', 'localhost', '127.0.0.1']
 
 # Configure CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://news.djangify.com').split(',')
 
-
 SITE_ID = 1
-
 
 # Application definition
 
@@ -96,7 +84,7 @@ DATABASES = {
 }
 
 # Static files configuration
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -106,106 +94,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Configure logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{asctime} {levelname} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{asctime} {levelname} {message}',
-            'style': '{',
-        },
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'django_file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOGS_DIR, 'django.log'),
-            'maxBytes': 10485760,  # 10MB
-            'backupCount': 10,
-            'formatter': 'verbose',
-        },
-        'error_file': {
-            'level': 'ERROR',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOGS_DIR, 'error.log'),
-            'maxBytes': 10485760,  # 10MB
-            'backupCount': 10,
-            'formatter': 'verbose',
-        },
-        'debug_file': {
-            'level': 'DEBUG',
-            'filters': ['require_debug_true'],
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(LOGS_DIR, 'debug.log'),
-            'maxBytes': 10485760,  # 10MB
-            'backupCount': 10,
-            'formatter': 'verbose',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'django_file', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'django.server': {
-            'handlers': ['console', 'django_file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.request': {
-            'handlers': ['error_file', 'mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'django.db.backends': {
-            'handlers': ['debug_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-        'django.security': {
-            'handlers': ['error_file', 'mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        # Add custom loggers for your applications
-        'feeds': {
-            'handlers': ['console', 'django_file', 'error_file', 'debug_file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-        'core': {
-            'handlers': ['console', 'django_file', 'error_file', 'debug_file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
 
 # Email settings for error notifications (optional)
 ADMINS = [('Admin', 'djangify@gmail.com')]
