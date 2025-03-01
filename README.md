@@ -1,6 +1,6 @@
 # Djangify News Aggregator
 
-I decided to build a news aggregator using Django and Django Rest Framework to collate all the different newsletters and youtube channels I reguarly read. So now, rather than have a ton of emails in my inbox I can visit the site and read the latest news.
+I decided to build a news aggregator using Django and Django Rest Framework to collate all the different newsletters and youtube channels I reguarly read/watch. So now, rather than have a ton of emails in my inbox I can visit the site and keep up with the latest news from my favorite educators on the topics of AI, Django, Python and TailwindCSS.
 
 You can visit the site here: [djangify news](https://news.djangify.com)
 
