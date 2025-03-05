@@ -18,7 +18,7 @@ urlpatterns = [
     path('', include('feeds.urls')),  # maintains existing API endpoints
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'), 
-        path('static/<path:path>', serve, {
+    path('static/<path:path>', serve, {
         'document_root': settings.STATIC_ROOT,
     }),
     path('media/<path:path>', serve, {

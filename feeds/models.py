@@ -51,7 +51,7 @@ class RSSFeed(models.Model):
 class Content(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField()
-    url = models.URLField()
+    url = models.URLField(max_length=2000)
     image_url = models.URLField(max_length=2000, null=True, blank=True)
     source = models.ForeignKey(RSSFeed, on_delete=models.CASCADE)
     published_date = models.DateTimeField()

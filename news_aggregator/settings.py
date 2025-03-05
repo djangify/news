@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ['news.djangify.com', 'localhost', '127.0.0.1']
 # Configure CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://news.djangify.com').split(',')
 
-SITE_ID = 1
+SITE_ID = 2
 
 # Application definition
 
@@ -145,7 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Add Crontab settings
 CRONJOBS = [
-    ('*/30 * * * *', 'django.core.management.call_command', ['fetch_feeds'])
+    ('0 */7 * * *', 'django.core.management.call_command', ['fetch_feeds'])
 ]
 
 REST_FRAMEWORK = {
