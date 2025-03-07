@@ -22,6 +22,7 @@ class RSSFeed(models.Model):
         ('devops', 'DevOps'),
         ('news', 'News'),
         ('general', 'General'),
+        ('youtube', 'YouTube'),
     ]
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default="general")
     
