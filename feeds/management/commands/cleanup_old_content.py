@@ -16,16 +16,12 @@ class Command(BaseCommand):
         days = options['days']
         cutoff_date = timezone.now() - timedelta(days=days)
         
-        # Keep pinned content and favorited content
-        has_favorites = Favorite.objects.filter(content=OuterRef('pk')).exists()
-        
+        # Find old content that is not pinned and not favorited
         old_content = Content.objects.filter(
             published_date__lt=cutoff_date,
             is_pinned=False
-        ).annotate(
-            is_favorited=Exists(Favorite.objects.filter(content=OuterRef('pk')))
-        ).filter(
-            is_favorited=False
+        ).exclude(
+            favorite__isnull=False
         )
         
         count = old_content.count()
@@ -34,3 +30,4 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f'Successfully removed {count} content items older than {days} days (excluding favorites)')
         )
+        
