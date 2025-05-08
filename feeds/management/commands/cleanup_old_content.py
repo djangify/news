@@ -2,7 +2,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from datetime import timedelta
-from django.db.models import Exists, OuterRef
 from feeds.models import Content, Favorite
 
 
@@ -21,7 +20,7 @@ class Command(BaseCommand):
             published_date__lt=cutoff_date,
             is_pinned=False
         ).exclude(
-            favorite__isnull=False
+            favorited_by__isnull=False
         )
         
         count = old_content.count()
@@ -30,4 +29,3 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f'Successfully removed {count} content items older than {days} days (excluding favorites)')
         )
-        
