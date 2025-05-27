@@ -1,23 +1,35 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import pymysql
-import os
+import environ
 
-load_dotenv()
-pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key-here')
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = ['news.djangify.com', 'localhost', '127.0.0.1']
+DEBUG = False
 
-# Configure CSRF_TRUSTED_ORIGINS
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://news.djangify.com').split(',')
+# CSRF Configuration
+CSRF_TRUSTED_ORIGINS = [
+    'https://news.djangify.com',
+    'https://www.news.djangify.com',
+    'https://65.108.89.200',
+    'http://localhost',
+    'http://127.0.0.1',
+]
+
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST', default='localhost'),
+        'PORT': env('DATABASE_PORT', default='5432'),
+    }
+}
 
 SITE_ID = 2
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.sites',
@@ -65,24 +77,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'news_aggregator.wsgi.application'
 
 
-# Database configuration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'news_aggregator'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
-        "OPTIONS": {
-            "charset": "utf8mb4",
-            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-            "use_unicode": True,
-            "connect_timeout": 10,
-            "autocommit": True,
-        }
-    }
-}
 
 # Static files configuration
 STATIC_URL = '/static/'
