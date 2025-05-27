@@ -1,8 +1,9 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 import environ
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(Path(__file__).resolve().parent.parent, '.env'))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key-here')

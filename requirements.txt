@@ -1,7 +1,6 @@
 Django
 dj-database-url
 django-crontab
-django-environ
 django-redis
 django-redis-cache
 djangorestframework
@@ -10,6 +9,7 @@ gunicorn
 psycopg2-binary
 Pillow
 python-dotenv
+python-environ
 pytz
 python-dateutil
 Redis
