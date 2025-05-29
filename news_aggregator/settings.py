@@ -9,6 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key-here')
 DEBUG = False
 
+ALLOWED_HOSTS = ['news.djangify.com','65.108.89.200', 'www.news.djangify.com', '.djangify.com', '127.0.0.1', '127.0.0.1:8000', 'localhost',]
+
+
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
     'https://news.djangify.com',

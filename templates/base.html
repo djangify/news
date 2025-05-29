@@ -3,78 +3,121 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A daily dose of tech, dev, and AI news from across the web, all in one place.">
-    <meta name="keywords" content="tech news, programming, AI, machine learning, python, django, web development, developer news">
-    <meta name="author" content="Djangify">
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Djangify News Aggregator">
-    <meta property="og:description" content="A daily dose of tech, dev, and AI news from across the web, all in one place.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://news.djangify.com">
-    <meta property="og:image" content="{% static 'img/djangify-logo.png' %}">
-    
-    <!-- Favicon -->
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
-    <title>News Aggregator - Your Daily Dose of News  </title>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A daily dose of tech, dev, and AI news from across the web, all in one place."
+    />
+    <meta
+      name="keywords"
+      content="tech news, programming, AI, machine learning, python, django, web development, developer news"
+    />
+    <meta name="author" content="Djangify" />
 
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
-    <link href="{% static 'css/main.css' %}" rel="stylesheet">
-</head>
-<body class="text-lg 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:bg-primary bg-gray-100">
-  {% include 'components/nav.html' %}
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:title" content="Djangify News Aggregator" />
+    <meta
+      property="og:description"
+      content="A daily dose of tech, dev, and AI news from across the web, all in one place."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://news.djangify.com" />
+    <meta property="og:image" content="{% static 'img/djangify-logo.png' %}" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="{% static 'img/favicon.ico' %}"
+      type="image/x-icon"
+    />
+    <title>News Aggregator - Your Daily Dose of News</title>
+    <script
+      defer
+      src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" />
+  </head>
+  <body
+    class="text-lg 2xl:max-w-screen-2xl 2xl:mx-auto 2xl:bg-primary bg-gray-100"
+  >
+    {% include 'components/nav.html' %}
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
     </main>
     <!-- Footer -->
-    <footer role="contentinfo">
-        {% include 'components/footer.html' %}
-    </footer>
-    
+    <footer role="contentinfo">{% include 'components/footer.html' %}</footer>
+
     <!-- Cookie Consent -->
-    <aside id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white py-4 px-6 hidden z-50" role="dialog" aria-labelledby="cookie-title">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-sm">
-                <h2 id="cookie-title" class="sr-only">Cookie Consent</h2>
-                We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. 
-                <a href="{% url 'privacy_policy' %}" class="underline hover:text-blue-300">Privacy Policy</a>
-            </div>
-            <div class="flex gap-4">
-                <button id="accept-cookies" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors" aria-label="Accept cookies">Accept</button>
-                <button id="decline-cookies" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors" aria-label="Decline cookies">Decline</button>
-            </div>
+    <aside
+      id="cookie-banner"
+      class="fixed bottom-0 left-0 right-0 bg-gray-900 text-white py-4 px-6 hidden z-50"
+      role="dialog"
+      aria-labelledby="cookie-title"
+    >
+      <div
+        class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4"
+      >
+        <div class="text-sm">
+          <h2 id="cookie-title" class="sr-only">Cookie Consent</h2>
+          We use cookies to enhance your experience. By continuing to visit this
+          site you agree to our use of cookies.
+          <a
+            href="{% url 'privacy_policy' %}"
+            class="underline hover:text-blue-300"
+            >Privacy Policy</a
+          >
         </div>
+        <div class="flex gap-4">
+          <button
+            id="accept-cookies"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            aria-label="Accept cookies"
+          >
+            Accept
+          </button>
+          <button
+            id="decline-cookies"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            aria-label="Decline cookies"
+          >
+            Decline
+          </button>
+        </div>
+      </div>
     </aside>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cookieConsent = localStorage.getItem('cookieConsent');
-            const banner = document.getElementById('cookie-banner');
-            
-            if (!cookieConsent) {
-                banner.classList.remove('hidden');
-            }
-            
-            document.getElementById('accept-cookies').addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                banner.classList.add('hidden');
-            });
-            
-            document.getElementById('decline-cookies').addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'declined');
-                banner.classList.add('hidden');
-            });
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        const cookieConsent = localStorage.getItem("cookieConsent");
+        const banner = document.getElementById("cookie-banner");
+
+        if (!cookieConsent) {
+          banner.classList.remove("hidden");
+        }
+
+        document
+          .getElementById("accept-cookies")
+          .addEventListener("click", function () {
+            localStorage.setItem("cookieConsent", "accepted");
+            banner.classList.add("hidden");
+          });
+
+        document
+          .getElementById("decline-cookies")
+          .addEventListener("click", function () {
+            localStorage.setItem("cookieConsent", "declined");
+            banner.classList.add("hidden");
+          });
+      });
     </script>
-    
 
     {% block extra_js %}
-        <script src="{% static 'js/main.js' %}"></script>
-        <script src="{% static 'js/category-filter.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/category-filter.js' %}"></script>
     {% endblock %}
-</body>
+  </body>
 </html>
