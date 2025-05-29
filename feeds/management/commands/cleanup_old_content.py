@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Remove content older than a specified number of days unless favorited'
 
     def add_arguments(self, parser):
-        parser.add_argument('--days', type=int, default=60, help='Number of days to keep content')
+        parser.add_argument('--days', type=int, default=30, help='Number of days to keep content')
 
     def handle(self, *args, **options):
         days = options['days']
